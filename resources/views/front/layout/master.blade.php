@@ -14,6 +14,8 @@
     <link href="https://fonts.googleapis.com/css?family=Muli:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
 
     <!-- Css Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="front/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="front/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="front/css/themify-icons.css" type="text/css">
@@ -22,7 +24,9 @@
     <link rel="stylesheet" href="front/css/nice-select.css" type="text/css">
     <link rel="stylesheet" href="front/css/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="front/css/slicknav.min.css" type="text/css">
-    <link rel="stylesheet" href="front/css/style.css" type="text/css">
+    <link rel="stylesheet" href="{{ asset('front/css/style.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('front/css/rating.css') }}">
+
 </head>
 
 <body>
@@ -34,56 +38,51 @@
 
     <!-- Header Session Begin -->
     <header class="header-section">
-
-        <div class="header-top">
+        {{-- <div class="header-top">
             <div class="container">
                 <div class="ht-left">
                     <div class="mail-service">
                         <i class="fa fa-envelope"></i>
-                        txfashionshop@mail.com
+                        thinhle15112002@gmail.com
                     </div>
                     <div class="phone-service">
                         <i class="fa fa-phone"></i>
-                        +84 45.43.66.77
+                        (+84) 0765 232 360
                     </div>
                 </div>
 
                 <div class="ht-right">
-                    <a href="login.html" class="login-panel"><i class="fa fa-user"></i>Login</a>
-                    <div class="lan-selector">
-                        <select class="language_drop" name="countries" style="width: 300px;">
-                            <option value="yt" data-image="front/img/vn.jpg" data-imagecss="flag yt" data-title="VietNam">VN</option>
-                            <option value="yu" data-image="front/img/eng.jpg" data-imagecss="flag yu" data-title="English">EN</option>
-                        </select>
-                    </div>
+                    <a href="login.html" class="login-panel"><i class="fa fa-user"></i>Đăng nhập / Đăng ký</a>
+                    
                     <div class="top-social">
-                        <a href="#"><i class="ti-facebook"></i></a>
-                        <a href="#"><i class="ti-instagram"></i></a>
-                        <a href="#"><i class="ti-pinterest"></i></a>
+                        <a href="https://www.facebook.com/thinhh.02"><i class="ti-facebook"></i></a>
+                        <a href="https://www.instagram.com/_dinoshelby_/"><i class="ti-instagram"></i></a>                    
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="container">
             <div class="inner-header">
                 <div class="row">
-                    <div class="col-lg-2 col-md-2">
+                    {{-- <div class="col-lg-2 col-md-2">
                         <div class="logo">
                             <a href="index.html">
                                 <img src="front/img/logotfashion.png" height="25" alt="">
                             </a>
                         </div>
-                    </div>
+                    </div> --}}
 
-                    <div class="col-lg-7 col-md-7">
-                        <div class="advanced-search">
-                            <button type="button" class="category-btn">All Categories</button>
-                            <div class="input-group">
-                                <input type="text" placeholder="What do you need?">
-                                <button type="button"><i class="ti-search"></i></button>
+                    <div class="col-lg-9 col-md-9">
+                        <form action="shop">
+                            <div class="advanced-search">
+                                {{-- <button type="button" class="category-btn">All Categories</button> --}}
+                                <div class="input-group">
+                                    <input name="search" value="{{ request('search') }}" type="text" placeholder="What do you need?">
+                                    {{-- <button type="submit"><i class="ti-search"></i></button> --}}
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                     <div class="col-lg-3 col-md-3 text-right">
                         <ul class="nav-right">
@@ -94,52 +93,48 @@
                                 </a>
                             </li>
                             <li class="cart-icon">
-                                <a href="">
+                                <a href="./cart">
                                     <i class="icon_bag_alt"></i>
-                                    <span>3</span>
+                                    <span class="cart-count">{{ Cart::count() }}</span>
                                 </a>
                                 <div class="cart-hover">
                                     <div class="select-items">
                                         <table>
                                             <tbody>
-                                            <tr>
-                                                <td class="si-pic"><img src="front/img/select-product-1.jpg"></td>
-                                                <td class="si-text">
-                                                    <div class="product-selected">
-                                                        <p>$600.00 x 1</p>
-                                                        <h6>Kabino...</h6>
-                                                    </div>
-                                                </td>
-                                                <td class="si-close">
-                                                    <i class="ti-close"></i>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="si-pic"><img src="front/img/select-product-2.jpg"></td>
-                                                <td class="si-text">
-                                                    <div class="product-selected">
-                                                        <p>$600.00 x 1</p>
-                                                        <h6>Kabino...</h6>
-                                                    </div>
-                                                </td>
-                                                <td class="si-close">
-                                                    <i class="ti-close"></i>
-                                                </td>
-                                            </tr>
+                                            @foreach(Cart::content() as $cart)
+                                                <tr data-rowId="{{ $cart->rowId }}">
+                                                    <td class="si-pic"><img style="height: 70px;" src="front/img/products/{{ $cart->options->images[0]->path }}"></td>
+                                                    <td class="si-text">
+                                                        <div class="product-selected">
+                                                            @php                                                      
+                                                                $colorMap = config('convertColor.colors');
+                                                                $rawColor = $cart->options->color;
+                                                                $displayColor = $colorMap[$rawColor] ?? $rawColor;
+                                                            @endphp
+                                                            {{-- <p>{{ number_format($cart->price * 1000, 0, ',', '.') }}đ </p> --}}
+                                                            <h6>{{$cart->name}} | x{{$cart->qty}}</h6>
+                                                            <p>{{ $displayColor }} / {{ $cart->options->size }}</p>
+                                                        </div>
+                                                    </td>
+                                                    <td class="si-close">
+                                                        <i onclick="removeCart('{{ $cart->rowId }}')" class="ti-trash remove-icon-red"></i>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="select-total">
                                         <span>Total : </span>
-                                        <h5>$1200.00</h5>
+                                        <h5>{{ number_format(Cart::priceTotal(0, '', '') * 1000, 0, ',', '.') }}đ</h5>
                                     </div>
                                     <div class="select-button">
-                                        <a href="shopping-cart.html" class="primary-btn view-card">View card</a>
-                                        <a href="check-out.html" class="primary-btn checkout-btn">Check out</a>
+                                        <a href="./cart" class="primary-btn view-card">View card</a>
+                                        <a href="./checkout" class="primary-btn checkout-btn">Check out</a>
                                     </div>
                                 </div>
                             </li>
-                            <li class="cart-price">$120.00</li>
+                            <li class="cart-price">{{ number_format(Cart::priceTotal(0, '', '') * 1000, 0, ',', '.') }}đ</li>
                         </ul>
                     </div>
                 </div>
@@ -149,44 +144,43 @@
         <div class="nav-item">
             <div class="container">
                 <div class="nav-depart">
-                    <div class="depart-btn">
+                    {{-- <div class="depart-btn">
                         <i class="ti-menu"></i>
                         <span>All departments</span>
                         <ul class="depart-hover">
                             <li class="active"><a href="#">Women's Clothing</a></li>
                             <li><a href="#">Men's Clothing</a></li>
-                            <li><a href="#">Underwear</a></li>
-                            <li><a href="#">Kid's Clothing</a></li>
-                            <li><a href="#">Local Brands</a></li>
-                            <li><a href="#">Accessories / Shoes</a></li>
-                            <li><a href="#">Luxury Brands</a></li>
-                            <li><a href="#">Brand Outdoor Apparel</a></li>
+                            <li><a href="#">Unisex</a></li>                      
+                            <li><a href="#">Handbags</a></li>
+                            <li><a href="#">Accessories</a></li>
+                            <li><a href="#">Hats</a></li>
                         </ul>
-                    </div>
+                    </div> --}}
                 </div>
                 <nav class="nav-menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="">Home</a></li>
-                        <li><a href="">Shop</a></li>
+                        <li class="{{ (request()->segment(1) == '') ? 'active' : ''}} "><a href="./">Home</a></li>
+                        <li class="{{ (request()->segment(1) == 'shop') ? 'active' : ''}} "><a href="./shop">Shop</a></li>
                         <li><a href="">Collection</a>
                             <ul class="dropdown">
-                                <li><a href="">Men's</a></li>
-                                <li><a href="">Woment's</a></li>
-                                <li><a href="">Kid's</a></li>
+                                <li><a href="">Men</a></li>
+                                <li><a href="">Women</a></li>
+                                <li><a href="">Unisex</a></li>
                             </ul>
                         </li>
                         <li><a href="">Blog</a></li>
-                        <li><a href="">Contact</a></li>
-                        <li><a href="">Pages</a>
+                        {{-- <li><a href="">Contact</a></li> --}}
+                        <li><a href="">Login</a></li>
+                        {{-- <li><a href="">Pages</a>
                             <ul class="dropdown">
                                 <li><a href="blog-details.html">Blog Details</a></li>
-                                <li><a href="shopping-cart.html">Shopping Cart</a></li>
-                                <li><a href="check-out.html">Checkout</a></li>
+                                <li><a href="./cart">Shopping Cart</a></li>
+                                <li><a href="./checkout">Checkout</a></li>
                                 <li><a href="faq.html">Faq</a></li>
                                 <li><a href="register.html">Register</a></li>
                                 <li><a href="login.html">Login</a></li>
                             </ul>
-                        </li>
+                        </li> --}}
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -199,7 +193,7 @@
     @yield('body')
 
     <!-- Partner Logo Section Begin -->
-    <div class="partner-logo">
+    {{-- <div class="partner-logo">
         <div class="container">
             <div class="logo-carousel owl-carousel">
                 <div class="logo-item">
@@ -229,7 +223,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Partner Logo Section End -->
 
     <!-- Footer Section Begin -->
@@ -240,7 +234,7 @@
                     <div class="footer-left">
                         <div class="footer-logo">
                             <a href="index.html">
-                                <img src="front/img/footer-logo.png" height="25" alt="">
+                                <img src="front/img/" height="25" alt="">
                             </a>
                         </div>
                         <ul>
@@ -315,6 +309,8 @@
 
     <!-- Js Plugins -->
     <script src="front/js/jquery-3.3.1.min.js"></script>
+    <script src="{{ asset('front/js/districts.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="front/js/bootstrap.min.js"></script>
     <script src="front/js/jquery-ui.min.js"></script>
     <script src="front/js/jquery.countdown.min.js"></script>
@@ -323,7 +319,9 @@
     <script src="front/js/jquery.dd.min.js"></script>
     <script src="front/js/jquery.slicknav.js"></script>
     <script src="front/js/owl.carousel.min.js"></script>
+    <script src="front/js/owlcarousel2-filter.min.js"></script>
     <script src="front/js/main.js"></script>
+    @yield('scripts')
 </body>
 
 </html>
