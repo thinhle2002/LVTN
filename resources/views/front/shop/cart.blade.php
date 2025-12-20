@@ -14,11 +14,11 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>Image</th>
-                                <th class="p-name">Product</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
+                                <th>Hình ảnh</th>
+                                <th class="p-name">Sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Tổng tiền</th>
                                 <th>
                                     <i onclick="confirm('Are you sure to delete all carts?') === true ? destroyCart() : ''" class="ti-close" style="cursor: pointer"></i>
                                 </th>
@@ -29,29 +29,29 @@
                                     <tr data-rowid="{{ $cart->rowId }}">
                                         <td>
                                             <div class="cart-pic first-row">
-                                                <img style="height: 170px;" src="front/img/products/{{ $cart->options->images[0]->path }}" alt="">
+                                                <img style="height: 170px;" src="upload/front/img/products/{{ $cart->options->images['path'] }}" alt="">
                                             </div>
                                         </td>                                                                         
                                         <td class="cart-title first-row">
                                             <h5>{{ $cart->name }}</h5>                                     
                                             @php
-                                            $colorMap = config('convertColor.colors');
-                                            $rawColor = $cart->options->color ?? null;
-                                            $productSize = $cart->options->size ?? null;
+                                                $colorMap = config('convertColor.colors');
+                                                $rawColor = $cart->options->color ?? null;
+                                                $productSize = $cart->options->size ?? null;
 
-                                            $displayColor = $colorMap[$rawColor] ?? $rawColor;
-                                        @endphp
+                                                $displayColor = $colorMap[$rawColor] ?? $rawColor;
+                                            @endphp
                                  
-                                        @if ($rawColor || $productSize)
-                                            <p style="font-size: 14px; color: #666; margin-top: 5px;">
-                                                @if ($rawColor)
-                                                    {{ $displayColor }}
-                                                @endif
-                                                @if ($productSize)
-                                                    @if ($rawColor) / @endif {{ $productSize }}
-                                                @endif
-                                            </p>
-                                        @endif
+                                            @if ($rawColor || $productSize)
+                                                <p style="font-size: 14px; color: #666; margin-top: 5px;">
+                                                    @if ($rawColor)
+                                                        {{ $displayColor }}
+                                                    @endif
+                                                    @if ($productSize)
+                                                        @if ($rawColor) / @endif {{ $productSize }}
+                                                    @endif
+                                                </p>
+                                            @endif
                                         </td>
                                         <td class="p-price first-row">{{ number_format($cart->price * 1000, 0, ',', '.') }}đ</td>
                                         <td class="qua-col first-row">
@@ -75,7 +75,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="cart-buttons">
-                                <a href="/shop" class="primary-btn continue-shop">Continue shopping</a>
+                                <a href="/shop" class="primary-btn continue-shop">Tiếp tục mua sắm</a>
                                 {{-- <a href="#" class="primary-btn up-cart">Update cart</a> --}}
                             </div>
                             {{-- <div class="discount-coupon">
@@ -92,7 +92,12 @@
                                     <li class="subtotal">Tạm tính <span> {{ number_format($subtotal * 1000, 0, ',', '.') }}đ</span></li>
                                     <li class="cart-total">Tổng tiền <span> {{ number_format($total * 1000, 0, ',', '.') }}đ</span></li>
                                 </ul>
-                                <a href="./checkout" class="proceed-btn">THANH TOÁN</a>
+                                @if(Auth::check())
+                                    <a href="{{ url('/checkout') }}" class="proceed-btn">THANH TOÁN</a>
+                                @else
+                                    <a href="{{ url('./account/login') }}" class="proceed-btn **disabled**" **title="Vui lòng đăng nhập để thanh toán"**>Thanh toán</a> 
+                                    <p style="color: red; text-align: center; margin-top: 10px;">Vui lòng đăng nhập để thanh toán</p>
+                                @endif
                             </div>
                         </div>
                     </div>

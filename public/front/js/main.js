@@ -278,8 +278,8 @@
 		Bộ lọc sản phẩm trang chủ
 	--------------------- */
 
-    const product_men = $(".product-slider.men");
-    const product_women = $(".product-slider.women");
+    const product_clothing = $(".product-slider.clothing");
+    const product_accessories = $(".product-slider.accessories");
 
     $('.filter-control').on('click', '.item', function() {
         const $item = $(this);
@@ -289,11 +289,11 @@
         $item.siblings().removeClass('active');
         $item.addClass('active');
 
-        if(category === "men"){
-            product_men.owlcarousel2_filter(filter);
+        if(category === "clothing"){
+            product_clothing.owlcarousel2_filter(filter);
         }
-        if(category === "women"){
-            product_women.owlcarousel2_filter(filter);
+        if(category === "accessories"){
+            product_accessories.owlcarousel2_filter(filter);
         }
     })
 
@@ -354,7 +354,7 @@ function addCart(productId, color = null, size = null, qty = 1)
                 }
                 var newItem =
                     '<tr data-rowId="'+ reponse['cart'].rowId +'">\n' +
-                    '    <td class="si-pic"><img style="height: 70px;" src="front/img/products/'+ reponse['cart'].options.images[0].path + '"></td>\n' +
+                    '    <td class="si-pic"><img style="height: 70px;" src="upload/front/img/products/'+ reponse['cart'].options.images['path'] + '"></td>\n' +
                     '    <td class="si-text">\n' +
                     '        <div class="product-selected">\n' +
                     // '            <p>'+ formatVND(reponse['cart'].price * 1000) + ' x ' + reponse['cart'].qty + '</p>\n' +
@@ -579,5 +579,3 @@ function formatVND(amount) {
     var numericAmount = parseFloat(amount);
     return numericAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + 'đ';
 }
-
-    

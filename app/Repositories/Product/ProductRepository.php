@@ -28,6 +28,7 @@ class ProductRepository extends BaseRepositories implements ProductRepositoryInt
              ->where('product_category_id', $categoryId)
              ->get();
      }
+
      public function getProductOnIndex($request)
      {
          $search = $request->search ?? '';
@@ -45,6 +46,21 @@ class ProductRepository extends BaseRepositories implements ProductRepositoryInt
 
         return $products;
      }
+     public function getTagsByCategory()
+    {
+        return ProductCategory::with(['product' => function($query) {
+            $query->select('tag', 'product_category_id')
+                ->distinct()
+                ->whereNotNull('tag')
+                ->where('tag', '!=', '');
+        }])->get()->map(function($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'tags' => $category->product->pluck('tag')->unique()->values()
+            ];
+        });
+    }
      private function sortAndPagination($products, Request $request)
      {
          $perPage = $request->show ?? 9;
@@ -116,5 +132,24 @@ class ProductRepository extends BaseRepositories implements ProductRepositoryInt
             });
         }
         return $products;
+    }
+
+    public function getProductDetail($product, $color, $size)
+    {
+        return $product->productDetails()
+            ->with('productImages')
+            ->where('color', $color)
+            ->where('size', $size)
+            ->where('product_id', $product->id)
+            ->first();
+    }
+    public function getDistinctTags()
+    {
+        return Product::select('tag')
+            ->distinct()
+            ->whereNotNull('tag')
+            ->where('tag', '!=', '')
+            ->orderBy('tag', 'asc')
+            ->pluck('tag');
     }
 }

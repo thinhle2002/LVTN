@@ -18,16 +18,23 @@
     @endif
 
     <div class="filter-widget">
-        <h4 class="fw-title">Categories</h4>
+        <h4 class="fw-title">Danh mục</h4>
         <ul class="filter-categories">
+            @php
+                $categoryNames = config('categories.names');
+            @endphp
             @foreach($categories as $category)
-                <li><a href="{{ request()->segment(2) == 'product' ? url('shop/category/' . $category->name) : url('shop/category/' . $category->name) }}">{{ $category->name }}</a></li>
+                <li>
+                    <a href="{{ url('shop/category/' . $category->name) }}">
+                        {{ $categoryNames[$category->name] ?? $category->name }}
+                    </a>
+                </li>
             @endforeach
         </ul>
     </div>
 
     <div class="filter-widget">
-        <h4 class="fw-title">Brand</h4>
+        <h4 class="fw-title">Thương hiệu</h4>
         <div class="fw-brand-check">
             @foreach($brands as $brand)
                 <div class="bc-item">
@@ -44,28 +51,35 @@
             @endforeach
         </div>
     </div>
-    
+    @php
+        $tags = config('tags.labels');
+    @endphp
     <div class="filter-widget">
-        <h4 class="fw-title">Tags</h4>
-        <div class="fw-tags-choose"> 
-            @foreach(['Clothing', 'Handbags', 'Accessories', 'Hats'] as $tag)
-                <div class="tag-item"> 
-                    <input type="radio" 
-                    id="tag-{{ $tag }}" 
-                    name="tag" 
-                    value="{{ $tag }}" 
-                    {{ request('tag') == $tag ? 'checked' : '' }}
-                    onchange="this.form.submit();">
-                
-                    <label for="tag-{{ $tag }}" class="{{ request('tag') == $tag ? 'active' : '' }}">
-                    {{ ucwords($tag) }} </label>
-                </div>
-            @endforeach
-        </div>
+        <h4 class="fw-title">Loại sản phẩm</h4>
+
+        <form method="GET">
+            <div class="fw-tags-choose">
+                @foreach($tags as $key => $label)
+                    <div class="tag-item">
+                        <input type="radio"
+                            id="tag-{{ $key }}"
+                            name="tag"
+                            value="{{ $key }}"
+                            {{ request('tag') == $key ? 'checked' : '' }}
+                            onchange="this.form.submit();">
+
+                        <label for="tag-{{ $key }}" 
+                            class="{{ request('tag') == $key ? 'active' : '' }}">
+                            {{ $label }}
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+        </form>
     </div>
-    
+
     <div class="filter-widget">
-        <h4 class="fw-title">Size</h4>
+        <h4 class="fw-title">Kích cỡ</h4>
         <div class="fw-size-choose">
             @foreach(['s', 'm', 'l', 'xl', '20l', '25l', '30l', 'fs'] as $size)
             <div class="sc-item">
@@ -79,7 +93,7 @@
     </div>
     
     <div class="filter-widget">
-        <h4 class="fw-title">Color</h4>
+        <h4 class="fw-title">Màu sắc</h4>
         <div class="fw-color-choose">
             @foreach([
                 'black' => 'Đen', 'white' => 'Trắng', 'pink' => 'Hồng', 'gray' => 'Xám đậm',
@@ -112,7 +126,7 @@
     @endforeach
 
     <div class="filter-widget">
-        <h4 class="fw-title">Price</h4>
+        <h4 class="fw-title">Giá tiền</h4>
         <div class="filter-range-wrap">
             <div class="range-slider">
                 <div class="price-input">
@@ -143,6 +157,6 @@
                 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
             </div>
         </div>
-        <button type="submit" class="filter-btn">Filter</button>
+        <button type="submit" class="filter-btn">Lọc</button>
     </div>
 </form>

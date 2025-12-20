@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="front/css/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="front/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="{{ asset('front/css/style.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('front/css/category-dropdown.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('front/css/rating.css') }}">
 
 </head>
@@ -38,7 +39,7 @@
 
     <!-- Header Session Begin -->
     <header class="header-section">
-        {{-- <div class="header-top">
+        <div class="header-top" id="header-top">
             <div class="container">
                 <div class="ht-left">
                     <div class="mail-service">
@@ -52,15 +53,32 @@
                 </div>
 
                 <div class="ht-right">
-                    <a href="login.html" class="login-panel"><i class="fa fa-user"></i>Đăng nhập / Đăng ký</a>
-                    
-                    <div class="top-social">
+
+                    @if (Auth::check())
+                        <div class="dropdown-login">
+                            <a href="#" class="login-panel dropdown-toggle">
+                                <i class="fa fa-user"></i>{{ Auth::user()->name }}
+                            </a>
+                            <div class="dropdown-menu-custom">
+                                <a href="./account/profile-info" class="dropdown-item">
+                                    <i class="fa fa-pencil"></i> Thông tin cá nhân
+                                </a>
+                                <a href="./account/logout" class="dropdown-item">
+                                    <i class="fa fa-sign-out"></i> Đăng xuất
+                                </a>                    
+                            </div>
+                        </div>
+                    @else
+                        <a href="./account/login" class="login-panel"><i class="fa fa-user"></i>Đăng nhập / Đăng ký</a>
+                    @endif
+
+                    {{-- <div class="top-social">
                         <a href="https://www.facebook.com/thinhh.02"><i class="ti-facebook"></i></a>
                         <a href="https://www.instagram.com/_dinoshelby_/"><i class="ti-instagram"></i></a>                    
-                    </div>
+                    </div> --}}
                 </div>
             </div>
-        </div> --}}
+        </div>
 
         <div class="container">
             <div class="inner-header">
@@ -78,7 +96,7 @@
                             <div class="advanced-search">
                                 {{-- <button type="button" class="category-btn">All Categories</button> --}}
                                 <div class="input-group">
-                                    <input name="search" value="{{ request('search') }}" type="text" placeholder="What do you need?">
+                                    <input name="search" value="{{ request('search') }}" type="text" placeholder="Bạn muốn tìm gì?">
                                     {{-- <button type="submit"><i class="ti-search"></i></button> --}}
                                 </div>
                             </div>
@@ -87,9 +105,9 @@
                     <div class="col-lg-3 col-md-3 text-right">
                         <ul class="nav-right">
                             <li class="heart-icon">
-                                <a href="#">
-                                    <i class="icon_heart_alt"></i>
-                                    <span>1</span>
+                                <a href="./account/user-orders">
+                                    <i class="icon_document" title="Đơn hàng của bạn"></i>
+                                    {{-- <span>0</span> --}}
                                 </a>
                             </li>
                             <li class="cart-icon">
@@ -103,7 +121,7 @@
                                             <tbody>
                                             @foreach(Cart::content() as $cart)
                                                 <tr data-rowId="{{ $cart->rowId }}">
-                                                    <td class="si-pic"><img style="height: 70px;" src="front/img/products/{{ $cart->options->images[0]->path }}"></td>
+                                                    <td class="si-pic"><img style="height: 70px;" src="upload/front/img/products/{{ $cart->options->images['path'] }}"></td>
                                                     <td class="si-text">
                                                         <div class="product-selected">
                                                             @php                                                      
@@ -141,169 +159,151 @@
             </div>
         </div>
 
+        <!-- Phần Nav Item với Dropdown Danh mục 2 cột -->
         <div class="nav-item">
             <div class="container">
                 <div class="nav-depart">
-                    {{-- <div class="depart-btn">
+                    <div class="depart-btn">
                         <i class="ti-menu"></i>
-                        <span>All departments</span>
-                        <ul class="depart-hover">
-                            <li class="active"><a href="#">Women's Clothing</a></li>
-                            <li><a href="#">Men's Clothing</a></li>
-                            <li><a href="#">Unisex</a></li>                      
-                            <li><a href="#">Handbags</a></li>
-                            <li><a href="#">Accessories</a></li>
-                            <li><a href="#">Hats</a></li>
-                        </ul>
-                    </div> --}}
-                </div>
+                        <span>Danh mục sản phẩm</span>
+                        <div class="depart-hover">
+                            @php
+                                $tagLabels = config('tags.labels');
+                            @endphp          
+                            @foreach($categoriesWithTags as $category)
+                                <div class="category-column">
+                                    <h5>{{ $category['display_name'] }}</h5>
+                                    <ul>
+                                        @foreach($category['tags'] as $tag)
+                                            <li>
+                                                <a href="./shop?tag={{ $tag }}">
+                                                    {{ $tagLabels[$tag] ?? $tag }}
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>                    
                 <nav class="nav-menu mobile-menu">
                     <ul>
-                        <li class="{{ (request()->segment(1) == '') ? 'active' : ''}} "><a href="./">Home</a></li>
-                        <li class="{{ (request()->segment(1) == 'shop') ? 'active' : ''}} "><a href="./shop">Shop</a></li>
-                        <li><a href="">Collection</a>
-                            <ul class="dropdown">
-                                <li><a href="">Men</a></li>
-                                <li><a href="">Women</a></li>
-                                <li><a href="">Unisex</a></li>
-                            </ul>
+                        <li class="{{ (request()->segment(1) == '') ? 'active' : ''}} ">
+                            <a href="./">Trang chủ</a>
                         </li>
-                        <li><a href="">Blog</a></li>
-                        {{-- <li><a href="">Contact</a></li> --}}
-                        <li><a href="">Login</a></li>
-                        {{-- <li><a href="">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href="blog-details.html">Blog Details</a></li>
-                                <li><a href="./cart">Shopping Cart</a></li>
-                                <li><a href="./checkout">Checkout</a></li>
-                                <li><a href="faq.html">Faq</a></li>
-                                <li><a href="register.html">Register</a></li>
-                                <li><a href="login.html">Login</a></li>
-                            </ul>
-                        </li> --}}
+                        <li class="{{ (request()->segment(1) == 'shop') ? 'active' : ''}} ">
+                            <a href="./shop">Sản phẩm</a>
+                        </li>
+                        <li class="{{ (request()->segment(1) == 'vouchers') ? 'active' : ''}}">
+                            <a href="./vouchers">Mã khuyến mãi</a>
+                        </li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
             </div>
         </div>
     </header>
+    <div id="header-toggle" class="header-toggle" title="Toggle header info">
+        <i class="fa fa-chevron-down"></i>
+    </div>
+
     <!-- Header End -->
 
     <!-- Body Here -->
     @yield('body')
 
-    <!-- Partner Logo Section Begin -->
-    {{-- <div class="partner-logo">
-        <div class="container">
-            <div class="logo-carousel owl-carousel">
-                <div class="logo-item">
-                    <div class="tablecell-inner">
-                        <img src="front/img/logo-carousel/logo-1.png">
-                    </div>
-                </div>
-                <div class="logo-item">
-                    <div class="tablecell-inner">
-                        <img src="front/img/logo-carousel/logo-2.png">
-                    </div>
-                </div>
-                <div class="logo-item">
-                    <div class="tablecell-inner">
-                        <img src="front/img/logo-carousel/logo-3.png">
-                    </div>
-                </div>
-                <div class="logo-item">
-                    <div class="tablecell-inner">
-                        <img src="front/img/logo-carousel/logo-4.png">
-                    </div>
-                </div>
-                <div class="logo-item">
-                    <div class="tablecell-inner">
-                        <img src="front/img/logo-carousel/logo-5.png">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!-- Partner Logo Section End -->
-
     <!-- Footer Section Begin -->
-    <footer class="footer-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="footer-left">
-                        <div class="footer-logo">
-                            <a href="index.html">
-                                <img src="front/img/" height="25" alt="">
-                            </a>
-                        </div>
-                        <ul>
-                            <li>164 TTN . TPHCM</li>
-                            <li>Phone : +84 24.55.66.525</li>
-                            <li>Email: txfashion@mail.com</li>
-                        </ul>
-                        <div class="footer-social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1">
-                    <div class="footer-widget">
-                        <h5>
-                            Information
-                        </h5>
-                        <ul>
-                            <li><a href="">About us</a></li>
-                            <li><a href="">Checkout</a></li>
-                            <li><a href="">Contact</a></li>
-                            <li><a href="">Service</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="footer-widget">
-                        <h5>
-                            My Account
-                        </h5>
-                        <ul>
-                            <li><a href="">My Account</a></li>
-                            <li><a href="">Contact</a></li>
-                            <li><a href="">Shopping cart</a></li>
-                            <li><a href="">Shop</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="newslatter-item">
-                        <h5>Join Our Newsletter Now</h5>
-                        <p>Got E-mail updates about our latest shop and speacial offers</p>
-                        <form action="#" class="subscribe-form">
-                            <input type="text" placeholder="Enter your email">
-                            <button type="button"> Subscribe</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="copyright-reserved">
+        <footer class="footer-section">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="copyright-text">
-                            Copyright © <script>document.write(new Date().getFullYear()); </script> All right reserved <i class="fa fa-heart-o" aria-hidden="true"></i>
+                    <div class="col-lg-3">
+                        <div class="footer-left">
+                            {{-- <div class="footer-logo">
+                                <a href="index.html">
+                                    <img src="front/img/" height="25" alt="">
+                                </a>
+                            </div> --}}
+                            <ul>
+                                <div class="footer-widget">
+                                    <h5>Chăm sóc khách hàng</h5>
+                                    <li>Điện thoại : (+84) 765232360</li>
+                                    <li>Email: txfashion@mail.com</li>
+                                </div>                       
+                            </ul>
+                            <div class="footer-social">
+                                <a href="#"><i class="fa fa-facebook"></i></a>
+                                <a href="#"><i class="fa fa-instagram"></i></a>
+                                <a href="#"><i class="fa fa-twitter"></i></a>
+                                <a href="#"><i class="fa fa-pinterest"></i></a>
+                            </div>
                         </div>
-                        <div class="payment-pic">
-                            <img src="front/img/payment-method.png" alt="">
+                    </div>
+                    <div class="col-lg-2 offset-lg-1">
+                        <div class="footer-widget">
+                            <h5>
+                                Thông tin
+                            </h5>
+                            <ul>
+                                <li><a href="">Về chúng tôi</a></li>                      
+                                <li><a href="">Liên hệ</a></li>
+                                <li><a href="">Dịch vụ</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="footer-widget">
+                            <h5>
+                                Tài khoản của tôi
+                            </h5>
+                            <ul>
+                                <li><a href="">Tài khoản của tôi</a></li>                      
+                                <li><a href="">Giỏ hàng</a></li>
+                                <li><a href="">Cửa hàng</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="footer-widget">
+                            <div class="google-map-footer">
+                                <h5>Vị trí cửa hàng</h5>
+                                <p>164 Trần Thị Nơi, Phường 4, Quận 8, TP.HCM</p>
+
+                                <div class="map-container" style="width: 100%; height: 200px; border-radius: 8px; overflow: hidden;">
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        frameborder="0"
+                                        style="border:0;"
+                                        allowfullscreen
+                                        loading="lazy"
+                                        referrerpolicy="no-referrer-when-downgrade"
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.8930092704156!2d106.62957537488054!3d10.744040789395047!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752ff9fd26219d%3A0xd8d50a3f217b2d0!2zMTY0IFRy4bqnbiBUaOG7iyBO4buZaSwgUC4gNCwgUXXhuq1uIDgsIFRow6BuaCBwaOG7kSBIb8OgIFRo4buNIE1pbmgsIFZp4buHdCBOYW0!5e0!3m2!1svi!2svi!4v1733145470000">
+                                    </iframe>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </footer>
+            <div class="copyright-reserved">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="copyright-text">
+                                Bản quyền © <script>document.write(new Date().getFullYear()); </script> Mọi quyền được bảo lưu 
+                                <i class="fa fa-heart-o" aria-hidden="true"></i>
+                            </div>
+                            {{-- <div class="payment-pic">
+                                <img src="front/img/payment-method.png" alt="">
+                            </div> --}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
     <!-- Footer Section End -->
+
 
 
 
@@ -321,6 +321,50 @@
     <script src="front/js/owl.carousel.min.js"></script>
     <script src="front/js/owlcarousel2-filter.min.js"></script>
     <script src="front/js/main.js"></script>
+    <script>
+        $(document).ready(function() {
+            var $toggle = $('#header-toggle');
+            var $headerTop = $('#header-top');
+            var $innerHeader = $('.inner-header');
+            var $headerContainer = $('.inner-header').parent('.container'); // Lấy container chứa inner-header
+            
+            if (!$toggle.length || !$headerTop.length || !$innerHeader.length) {
+                console.error('Some elements not found!');
+                return;
+            }
+            
+            // Ẩn cả header-top và inner-header khi load
+            $headerTop.hide();
+            $innerHeader.hide();
+            
+            $toggle.on('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Kiểm tra trạng thái hiện tại
+                var isVisible = $headerTop.is(':visible');
+                
+                if (isVisible) {
+                    // Đang hiển thị -> Ẩn đi
+                    $headerTop.slideUp(300);
+                    $innerHeader.slideUp(300);
+                    $toggle.removeClass('active');
+                    $toggle.find('i')
+                        .removeClass('fa-chevron-up')
+                        .addClass('fa-chevron-down');
+                } else {
+                    // Đang ẩn -> Hiển thị
+                    $headerTop.slideDown(300);
+                    $innerHeader.slideDown(300);
+                    $toggle.addClass('active');
+                    $toggle.find('i')
+                        .removeClass('fa-chevron-down')
+                        .addClass('fa-chevron-up');
+                }
+            });
+        });
+    </script>
+
     @yield('scripts')
 </body>
 

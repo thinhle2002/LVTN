@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductImage;
 use App\Service\Product\ProductService;
 use App\Service\Product\ProductServiceInterface;
 use Illuminate\Http\Request;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Log;
+
 class CartController extends Controller
 {
     private $productService;
@@ -20,14 +23,20 @@ class CartController extends Controller
         $carts = Cart::content();
         $total = Cart::priceTotal(0, '', '');
         $subtotal = Cart::subtotal(0, '', '');
-
+        // dd($carts);
         return view('front.shop.cart', compact('carts', 'total', 'subtotal'));
     }
     public function add(Request $request)
     {
         if($request->ajax()){
             $product = $this->productService->find($request->productId);
-            
+            $productDetail = $this->productService->getProductDetail($product, $request->color, $request->size);
+            if($productDetail->productImages == null){
+                $imageDetails = ProductImage::where('product_id', $product->id)->get();
+                $imageDetails = $imageDetails[0]->toArray();
+            }else{
+                $imageDetails = $productDetail->productImages;
+            }
             $reponse['cart'] = Cart::add([
                 'id' => $product->id,
                 'name' => $product->name,
@@ -35,12 +44,11 @@ class CartController extends Controller
                 'price' => $product->discount ?? $product->price,
                 'weight' => $product->weight ?? 0,
                 'options' => [
-                    'images' => $product->productImages,               
+                    'images' => $imageDetails,               
                     'color' => $request->color,
                     'size' => $request->size,
                 ],
             ]);
-            
             $reponse['count'] = Cart::count();
             $reponse['total'] = Cart::priceTotal(0, '', '') * 1000;
             

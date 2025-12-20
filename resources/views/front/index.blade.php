@@ -40,7 +40,7 @@
     </section>
     <!-- Hero Section End -->
 
-    <!-- Banner Section Begin -->
+    {{-- <!-- Banner Section Begin -->
     <div class="banner-section spad">
         <div class="container-fluid">
             <div class="row">
@@ -71,92 +71,74 @@
             </div>
         </div>
     </div>
-    <!-- Banner Section End -->
+    <!-- Banner Section End --> --}}
 
-    <!-- Women Banner Section Begin -->
+    <!-- Clothing Banner Section Begin -->
     <section class="women-banner spad">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-3">
-                    <div class="product-large set-bg" data-setbg="front/img/products/women-large.jpg">
-                        <h2>Women's</h2>
-                        <a href="#">Discover More</a>
+                    <div class="product-large set-bg" data-setbg="upload/front/img/products/women-large.jpg">
                     </div>
                 </div>
                 <div class="col-lg-8 offset-lg-1">
-                    <div class="filter-control">
+                    <h2 style="font-size: 28px; font-weight: 600; text-align: center; margin-bottom: 20px;">Thời trang</h2>
+                    <div class="filter-control">                       
                         <ul>
-                            <li class="active item" data-tag="*" data-category="women">All</li>
-                            <li class="item" data-tag=".Clothing" data-category="women">Clothings</li>
-                            <li class="item" data-tag=".HandBag" data-category="women">HandBags</li>
-                            <li class="item" data-tag=".Hats" data-category="women">Hats</li>
-                            <li class="item" data-tag=".Accessories" data-category="women">Accessories</li>
+                            <li class="active item" data-tag="*" data-category="clothing">Tất cả</li>
+                            <li class="item" data-tag=".T-Shirt" data-category="clothing">Áo thun</li>
+                            <li class="item" data-tag=".Shirt" data-category="clothing">Áo sơ mi</li>
+                            <li class="item" data-tag=".Polo" data-category="clothing">Áo polo</li>
+                            <li class="item" data-tag=".Pants" data-category="clothing">Quần dài</li>
+                            <li class="item" data-tag=".Short" data-category="clothing">Quần short</li>
                         </ul>
                     </div>
-                    <div class="product-slider owl-carousel women">
-                        @foreach($featuredProducts['women'] as $product)
-                            @include('front.components.product-item')
+                    <div class="product-slider owl-carousel clothing">
+                        @foreach($featuredProducts['clothing'] as $product)
+                            <div class="product-item item {{ $product->tag }}">
+                                @include('front.components.product-item')
+                            </div>
                         @endforeach
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Women Banner Section End -->
+    <!-- Clothing Banner Section End -->
 
-    <!-- Deal Of The Week Section Begin -->
-    <section class="deal-of-week set-bg spad" data-setbg="front/img/time-bg.jpg">
-        <div class="container">
-            <div class="col-lg-6 text-center">
-                <div class="section-title">
-                    <h2>Hot Deal</h2>
-                    <p>Basic TEE Oversize</p>
-                    <div class="product-price">
-                        139.000đ
-                        <span>/ T-Shirt</span>
-                    </div>
-                </div>
-                <div class="countdown-timer" id="countdown">          
-                </div>
-                <a href="" class="primary-btn">Mua ngay</a>
-            </div>
-        </div>
-    </section>
-    <!-- Deal Of The Week Section End -->
-
-    <!-- Man Banner Section Begin -->
+    <!-- Accessories Banner Section Begin -->
     <section class="women-banner spad">
         <div class="container-fluid">
             <div class="row">
                 <!-- Left side: Product slider -->
                 <div class="col-lg-8">
-                    <div class="filter-control">
+                    <h2 style="font-size: 28px; font-weight: 600; text-align: center; margin-bottom: 20px;">Phụ kiện</h2>
+                    <div class="filter-control">                    
                         <ul>
-                            <li class="active item" data-tag="*" data-category="men">All</li>
-                            <li class="item" data-tag=".Clothing" data-category="men">Clothings</li>
-                            <li class="item" data-tag=".HandBags" data-category="men">HandBags</li>
-                            <li class="item" data-tag=".Hats" data-category="men">Hats</li>
-                            <li class="item" data-tag=".Accessories" data-category="men">Accessories</li>
+                            <li class="active item" data-tag="*" data-category="accessories"></li>
+                            <li class="item" data-tag=".Balo" data-category="accessories">Balo</li>
+                            <li class="item" data-tag=".HandBag" data-category="accessories">Túi xách</li>
+                            <li class="item" data-tag=".Hat" data-category="accessories">Nón</li>                          
                         </ul>
                     </div>
-                    <div class="product-slider owl-carousel men">
-                        @foreach($featuredProducts['men'] as $product)
-                            @include('front.components.product-item')
+                    <div class="product-slider owl-carousel accessories">
+                        @foreach($featuredProducts['accessories'] as $product)
+                            <div class="product-item item {{ $product->tag }}">
+                                @include('front.components.product-item')
+                            </div>
                         @endforeach
                     </div>
                 </div>
 
-                <!-- Right side: Men banner -->
+                <!-- Right side: Accessories banner -->
                 <div class="col-lg-3 offset-lg-1">
-                    <div class="product-large set-bg" data-setbg="front/img/products/man-large.jpg">
-                        <h2>Men’s</h2>
-                        <a href="#">Discover More</a>
+                    <div class="product-large set-bg" data-setbg="upload/front/img/products/man-large.jpg">
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Man Banner Section End -->
+    <!-- Accessories Banner Section End -->
 
     <!-- Social Section Begin -->
     <div class="instagram-photo">
@@ -199,41 +181,11 @@
     </div>
     <!-- Social Section End -->
 
-    <!-- Latest Blog Section Begin -->
+    <!-- Latest Blog Section End (Removed) -->
+
+    <!-- Benefit Items Section Begin -->
     <section class="latest-blog spad">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="section-title">
-                        <h2>From The Blog</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                @foreach($blogs as $blog)
-                    <div class="col-lg-4 col-md-6">
-                        <div class="single-latest-blog">
-                            <img src="front/img/blog/{{$blog->image}}" alt="">
-                            <div class="latest-text">
-                                <div class="tag-list">
-                                    <div class="tab-item">
-                                        <i class="fa fa-calendar-o"></i>
-                                        {{date('M d, Y', strtotime($blog->created_at))}}
-                                    </div>
-                                    <div class="tab-item">
-                                        <i class="fa fa-comment"></i>
-                                        {{count($blog->blogComments)}}
-                                    </div>
-                                </div>
-                                <a href="">
-                                    <h4>{{$blog->title}}</h4>
-                                </a>
-                                <p>{{$blog->subtitle}}</p>
-                            </div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
             <div class="benefit-items">
                 <div class="row">
                     <div class="col-lg-4">
@@ -242,15 +194,15 @@
                                 <img src="front/img/icon-1.png" alt="">
                             </div>
                             <div class="sb-text">
-                                <h6>Free Ship</h6>
-                                <p>Nội thành và đơn trên 1tr</p>
+                                <h6>Giảm giá vận chuyển</h6>
+                                <p>Nội thành - TP.HCM</p>
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="single-benefit">
                             <div class="sb-icon">
-                                <img src="front/img/icon-1.png" alt="">
+                                <img src="front/img/icon-2.png" alt="">
                             </div>
                             <div class="sb-text">
                                 <h6>Giao hàng</h6>
@@ -261,7 +213,7 @@
                     <div class="col-lg-4">
                         <div class="single-benefit">
                             <div class="sb-icon">
-                                <img src="front/img/icon-1.png" alt="">
+                                <img src="front/img/icon-3.png" alt="">
                             </div>
                             <div class="sb-text">
                                 <h6>Thanh toán</h6>

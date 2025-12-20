@@ -21,4 +21,8 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+    public function voucher()
+    {
+        return $this->belongsTo(Voucher::class);
+    }
 }

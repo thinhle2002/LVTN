@@ -38,9 +38,9 @@ class ProductService extends BaseService implements ProductServiceInterface
 
     public function getFeaturedProducts()
     {
-        return[
-          "men" => $this->repository->getFeaturedProductsByCategory(1),
-            "women" => $this->repository->getFeaturedProductsByCategory(2),
+        return [
+            "clothing" => $this->repository->getFeaturedProductsByCategory(1),
+            "accessories" => $this->repository->getFeaturedProductsByCategory(2),
         ];
     }
     public function getProductOnIndex($request)
@@ -51,5 +51,17 @@ class ProductService extends BaseService implements ProductServiceInterface
     public function getProductByCategory($categoryName, $request)
     {
         return $this->repository->getProductsByCategory($categoryName, $request);
+    }
+    public function getTagsByCategory()
+    {
+        return $this->repository->getTagsByCategory();
+    }
+    public function getProductDetail($product, $color, $size)
+    {
+        return $this->repository->getProductDetail($product, $color, $size);
+    }
+    public function getDistinctTags()
+    {
+        return $this->repository->getDistinctTags();
     }
 }

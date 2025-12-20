@@ -37,5 +37,17 @@ class Product extends Model
     {
         return $this->hasMany(OrderDetail::class, 'order_id', 'id');
     }
+     public function getQtyAttribute($value)
+    {
+        if ($this->relationLoaded('productDetails')) {
+            return $this->productDetails->sum('qty');
+        }
+        return $this->productDetails()->sum('qty');
+    }
+
+    public function getTotalQtyAttribute()
+    {
+        return $this->qty;
+    }
 }
 

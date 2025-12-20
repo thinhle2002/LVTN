@@ -36,9 +36,28 @@ class ShopController extends Controller
         return view('front.shop.show', compact('product', 'relatedProducts', 'categories', 'brands'));
     }
 
-    public function postComment(Request $request){
-        $this->productCommentService->create($request->all());
-        return redirect()->back();
+    public function postComment(Request $request)
+    {
+        if (!auth()->check()) {
+            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để bình luận');
+        }      
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'messages' => 'required|min:10',
+            'rating' => 'required|integer|min:1|max:5'
+        ], [
+            'messages.required' => 'Vui lòng nhập nội dung bình luận',
+            'messages.min' => 'Bình luận phải có ít nhất 10 ký tự',
+            'rating.required' => 'Vui lòng chọn số sao đánh giá'
+        ]);
+        $data = $request->all();
+        $data['user_id'] = auth()->id();
+        $data['name'] = auth()->user()->name;
+        $data['email'] = auth()->user()->email;
+        
+        $this->productCommentService->create($data);
+        
+        return redirect()->back()->with('success', 'Cảm ơn bạn đã đánh giá sản phẩm!');
     }
     public function index(Request $request)
     {
