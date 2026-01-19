@@ -45,7 +45,7 @@
                 {{-- Form cập nhật thông tin cá nhân --}}
                 <div class="col-lg-6 mb-4">
                     <div class="profile-box">
-                        <form action="./account/profile-info" method="POST" class="checkout-form">
+                        <form action="/account/profile-info" method="POST" class="checkout-form">
                             @csrf
                             
                             <h4>Thông tin cá nhân</h4>

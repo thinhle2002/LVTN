@@ -20,7 +20,8 @@ class HomeController extends Controller
     {
         $featuredProducts = $this->productService->getFeaturedProducts();
         $categoriesWithTags = $this->productService->getTagsByCategory();
-        
-        return view('front.index', compact('featuredProducts', 'categoriesWithTags'));
+        $banners = \App\Models\Banner::where('active', 1)->get();
+
+        return view('front.index', compact('featuredProducts', 'categoriesWithTags', 'banners'));
     }
 }

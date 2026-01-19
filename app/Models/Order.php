@@ -13,6 +13,9 @@ class Order extends Model
     protected $table = 'orders';
     protected $primaryKey = 'id';
     protected $guarded = [];
+    protected $casts = [
+        'expected_delivery_date' => 'date',
+    ];
 
     public function orderDetails()
     {
@@ -69,5 +72,4 @@ class Order extends Model
                 return 'bg-light text-dark';
         }
     }
-
 }

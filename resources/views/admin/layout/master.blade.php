@@ -1241,6 +1241,11 @@
                                         </a>
                                     </li>
                                     <li>
+                                        <a href="./admin/comment" class="{{ request()->segment(2) == 'comment' ? 'mm-active' : '' }}">
+                                            <i class="metismenu-icon"></i>Đánh giá khách hàng
+                                        </a>
+                                    </li>
+                                    <li>
                                         <a href="./admin/banner" class="{{ request()->segment(2) == 'banner' ? 'mm-active' : '' }}">
                                             <i class="metismenu-icon"></i>Biểu ngữ
                                         </a>

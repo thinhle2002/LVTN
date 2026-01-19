@@ -1,35 +1,35 @@
 @extends('admin.layout.master')
-@section('title', 'Doanh thu sản phẩm')
+@section('title', 'Doanh thu theo khách hàng')
 @section('body')
 
 <div class="app-main__inner">
     <div class="app-page-title">
         <div class="page-title-wrapper">
-            
             <div class="page-title-heading">
                 <div class="page-title-icon">
-                    <i class="pe-7s-graph2 icon-gradient bg-mean-fruit"></i>
+                    <i class="pe-7s-users icon-gradient bg-mean-fruit"></i>
                 </div>
                 <div>
-                    Doanh thu sản phẩm
+                    Doanh thu theo khách hàng
                     <div class="page-title-subheading">
-                        Xem thống kê doanh thu theo sản phẩm
+                        Xem thống kê doanh thu theo từng khách hàng
                     </div>
                 </div>
             </div>
+            <div class="page-title-actions">
+                <a href="{{ route('revenue.index') }}" class="btn btn-shadow btn-info">
+                    <i class="fa fa-arrow-left"></i> Doanh thu sản phẩm
+                </a>
+            </div>
         </div>
     </div>
-    <div class="page-title-actions">
-        <a href="{{ route('revenue.byCustomer') }}" class="btn btn-shadow btn-info">
-            <i class="fa fa-users"></i> Doanh thu theo khách hàng
-        </a>
-    </div>
+
     <!-- Bộ lọc -->
     <div class="row mb-3">
         <div class="col-md-12">
             <div class="main-card card">
                 <div class="card-body">
-                    <form method="GET" action="{{ route('revenue.index') }}">
+                    <form method="GET" action="{{ route('revenue.byCustomer') }}">
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="form-group">
@@ -47,9 +47,9 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Tìm kiếm sản phẩm</label>
+                                    <label>Tìm kiếm khách hàng</label>
                                     <input type="text" name="search" class="form-control" 
-                                           value="{{ $search }}" placeholder="Nhập tên sản phẩm">
+                                           value="{{ $search }}" placeholder="Nhập tên, email hoặc SĐT">
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -69,21 +69,35 @@
 
     <!-- Thẻ thống kê tổng quan -->
     <div class="row mb-3">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card mb-3 widget-chart">
                 <div class="widget-chart-content">
                     <div class="icon-wrapper rounded-circle">
                         <div class="icon-wrapper-bg bg-primary"></div>
-                        <i class="lnr-cart text-primary"></i>
+                        <i class="lnr-users text-primary"></i>
                     </div>
                     <div class="widget-numbers">
-                        {{ number_format($summary->total_products ?? 0, 0, ',', '.') }}
+                        {{ number_format($summary->total_customers ?? 0, 0, ',', '.') }}
                     </div>
-                    <div class="widget-subheading">Tổng số sản phẩm đã bán</div>
+                    <div class="widget-subheading">Tổng số khách hàng</div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
+            <div class="card mb-3 widget-chart">
+                <div class="widget-chart-content">
+                    <div class="icon-wrapper rounded-circle">
+                        <div class="icon-wrapper-bg bg-warning"></div>
+                        <i class="lnr-cart text-warning"></i>
+                    </div>
+                    <div class="widget-numbers text-warning">
+                        {{ number_format($summary->total_orders ?? 0, 0, ',', '.') }}
+                    </div>
+                    <div class="widget-subheading">Tổng số đơn hàng</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
             <div class="card mb-3 widget-chart">
                 <div class="widget-chart-content">
                     <div class="icon-wrapper rounded-circle">
@@ -106,7 +120,7 @@
                 <div class="card-header">
                     <div class="card-header-title">
                         <i class="header-icon lnr-chart-bars icon-gradient bg-mean-fruit"></i>
-                        Danh sách doanh thu theo sản phẩm
+                        Danh sách doanh thu theo khách hàng
                     </div>
                 </div>
 
@@ -115,9 +129,10 @@
                         <thead>
                             <tr>
                                 <th class="text-center">STT</th>
-                                <th>Tên sản phẩm</th>
-                                <th class="text-center">Số lượng bán</th>
-                                <th class="text-center">Doanh thu</th>
+                                <th>Khách hàng</th>
+                                <th class="text-center">Số đơn hàng</th>
+                                <th class="text-center">Tổng doanh thu</th>
+                                <th class="text-center">Giá trị TB/đơn</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -129,10 +144,22 @@
                                     <td>
                                         <div class="widget-content p-0">
                                             <div class="widget-content-wrapper">
+                                                {{-- <div class="widget-content-left mr-3">
+                                                    <div class="widget-content-left">
+                                                        <div class="avatar-icon-wrapper">
+                                                            <div class="avatar-icon">
+                                                                <i class="pe-7s-user"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> --}}
                                                 <div class="widget-content-left flex2">
-                                                    <div class="widget-heading">{{ $item->product_name }}</div>
+                                                    <div class="widget-heading">{{ $item->user_name }}</div>
                                                     <div class="widget-subheading opacity-7">
-                                                        Mã SP: #{{ $item->product_id }}
+                                                        <i class="fa fa-envelope"></i> {{ $item->user_email }}
+                                                        @if($item->user_phone)
+                                                            <br><i class="fa fa-phone"></i> {{ $item->user_phone }}
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </div>
@@ -140,7 +167,7 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="badge badge-info">
-                                            {{ number_format($item->total_quantity, 0, ',', '.') }}
+                                            {{ number_format($item->total_orders, 0, ',', '.') }}
                                         </div>
                                     </td>
                                     <td class="text-center">
@@ -148,10 +175,15 @@
                                             {{ number_format($item->total_revenue, 0, ',', '.') }}đ
                                         </span>
                                     </td>
+                                    <td class="text-center">
+                                        <span class="text-primary">
+                                            {{ number_format($item->avg_order_value, 0, ',', '.') }}đ
+                                        </span>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">
+                                    <td colspan="5" class="text-center">
                                         <div class="p-5">
                                             <i class="fa fa-inbox fa-3x text-muted mb-3"></i>
                                             <p>Không có dữ liệu trong khoảng thời gian này</p>
@@ -185,9 +217,8 @@
 
 @section('scripts')
     <script>
-        // Auto submit form when date changes
+        // Optional: Auto submit form when date changes
         $('input[name="from_date"], input[name="to_date"]').on('change', function() {
-            // Optional: auto submit form
             // $(this).closest('form').submit();
         });
     </script>

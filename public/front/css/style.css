@@ -2031,12 +2031,15 @@ ol {
 .filter-widget .fw-color-choose .cs-item label.cs-purple:before {
     background-color: #471A8E;
 }
-.filter-widget .fw-color-choose .cs-item label.cs-blue:before {
-    background-color: #1D64FF;
+.filter-widget .fw-color-choose .cs-item label.cs-blue-navy:before {
+    background-color: #000080;
 }
 .filter-widget .fw-color-choose .cs-item label.cs-white:before {
     background: #FFFFFF;
     border: 1px solid #ccc;
+}
+.filter-widget .fw-color-choose .cs-item label.cs-black:before {
+    background-color: #000000;
 }
 .filter-widget .fw-color-choose .cs-item label:before {
 	position: absolute;

@@ -259,4 +259,4 @@
         opacity: 0.8;
     }
 </style>
-@endsectio
+@endsection

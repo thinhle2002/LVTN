@@ -118,12 +118,20 @@ class AccountController extends Controller
 
     public function profileInfo()
     {
+        if (!Auth::check()) {
+            return redirect('/account/login')->with('notification', 'Vui lòng đăng nhập để xem thông tin cá nhân.');
+        }
+        
         $user = Auth::user();
         return view('front.account.profile-info', compact('user'));
     }
 
     public function updateProfile(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect('/account/login')->with('notification', 'Vui lòng đăng nhập.');
+        }
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
@@ -257,6 +265,10 @@ class AccountController extends Controller
     }
     public function changePassword(Request $request)
     {
+        if (!Auth::check()) {
+            return redirect('/account/login')->with('notification', 'Vui lòng đăng nhập.');
+        }
+        
         $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|min:6|confirmed',
@@ -269,7 +281,7 @@ class AccountController extends Controller
 
         try {
             $user = Auth::user();
-           
+        
             if (!Hash::check($request->current_password, $user->password)) {
                 return redirect()->back()->with('error', 'Mật khẩu hiện tại không đúng!');
             }

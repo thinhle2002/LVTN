@@ -99,7 +99,7 @@
                 'black' => 'Đen', 'white' => 'Trắng', 'pink' => 'Hồng', 'gray' => 'Xám đậm',
                 'yellow' => 'Vàng', 'lavender' => 'Tím nhạt', 'dark-green' => 'Xanh lá', 'red' => 'Đỏ',
                 'taupe' => 'Nâu','cream' => 'Be/Kem','sky-blue' => 'Xanh nhạt','cyan' => 'Xanh Cyan','orange' => 'Cam',
-                'silver' => 'Xám bạc','purple' => 'Tím','blue' => 'Xanh dương'
+                'silver' => 'Xám bạc','purple' => 'Tím','blue-navy' => 'Xanh Navy'
             ] as $value => $label)
             <div class="cs-item">
                 <input type="radio" id="cs-{{ $value }}" name="color" value="{{ $value }}" 

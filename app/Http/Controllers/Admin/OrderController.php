@@ -44,14 +44,14 @@ class OrderController extends Controller
             
             DB::beginTransaction();
             
-            // Kiểm tra nếu chuyển sang trạng thái Hoàn thành
+            
             if ($newStatus == Constant::order_status_Finished && $oldStatus != Constant::order_status_Finished) {
                 // Trừ số lượng sản phẩm
                 foreach ($order->orderDetails as $detail) {
                     $productDetail = ProductDetail::where('product_id', $detail->product_id)->first();
                     
                     if ($productDetail) {
-                        // Kiểm tra số lượng có đủ không
+                        
                         if ($productDetail->qty < $detail->qty) {
                             DB::rollBack();
                             return response()->json([
@@ -60,20 +60,20 @@ class OrderController extends Controller
                             ], 400);
                         }
                         
-                        // Trừ số lượng
+                        
                         $productDetail->qty -= $detail->qty;
                         $productDetail->save();
                     }
                 }
             }
             
-            // Kiểm tra nếu từ Hoàn thành chuyển sang trạng thái khác (hoàn trả số lượng)
+            
             if ($oldStatus == Constant::order_status_Finished && $newStatus != Constant::order_status_Finished) {
                 foreach ($order->orderDetails as $detail) {
                     $productDetail = ProductDetail::where('product_id', $detail->product_id)->first();
                     
                     if ($productDetail) {
-                        // Hoàn trả số lượng
+                        
                         $productDetail->qty += $detail->qty;
                         $productDetail->save();
                     }
@@ -99,7 +99,35 @@ class OrderController extends Controller
             ], 500);
         }
     }
-
+    public function updateExpectedDelivery(Request $request, $id)
+    {
+        try {
+            $order = Order::findOrFail($id);
+            
+            $request->validate([
+                'expected_delivery_date' => 'required|date|after_or_equal:today'
+            ], [
+                'expected_delivery_date.required' => 'Vui lòng chọn ngày giao hàng',
+                'expected_delivery_date.date' => 'Ngày không hợp lệ',
+                'expected_delivery_date.after_or_equal' => 'Ngày giao hàng phải từ hôm nay trở đi'
+            ]);
+            
+            $order->expected_delivery_date = $request->expected_delivery_date;
+            $order->save();
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật ngày giao hàng dự kiến thành công',
+                'expected_delivery_date' => $order->expected_delivery_date->format('d/m/Y')
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
+            ], 500);
+        }
+    }
     public function destroy($id)
     {
         //

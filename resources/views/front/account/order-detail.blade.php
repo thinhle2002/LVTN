@@ -63,6 +63,16 @@
                                             <td style="font-weight: 600;">Ngày đặt hàng:</td>
                                             <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                                         </tr>
+                                        @if($order->expected_delivery_date)
+                                        <tr>
+                                            <td style="font-weight: 600;">Ngày giao hàng dự kiến:</td>
+                                            <td>
+                                                <span style="background-color: #17a2b8; color: white; padding: 5px 15px; border-radius: 3px; font-size: 13px;">
+                                                    <i class="fa fa-calendar-alt"></i> {{ $order->expected_delivery_date->format('d/m/Y') }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        @endif
                                         <tr>
                                             <td style="font-weight: 600;">Trạng thái:</td>
                                             <td>

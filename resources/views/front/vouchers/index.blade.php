@@ -37,13 +37,13 @@
                     $startDate = \Carbon\Carbon::parse($voucher->start_date)->startOfDay();
                     $endDate = \Carbon\Carbon::parse($voucher->end_date)->endOfDay();
 
-                    // Kiểm tra trạng thái
+                    
                     $isActive = $now->between($startDate, $endDate) && $voucher->qty > 0;
                     $isExpired = $now->greaterThan($endDate);
                     $isUpcoming = $now->lessThan($startDate);
                     $isOutOfStock = $voucher->qty <= 0;
                     
-                    // Xác định trạng thái hiển thị
+                    
                     $status = '';
                     $statusClass = '';
                     if ($isActive) {

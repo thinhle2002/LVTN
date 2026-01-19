@@ -75,10 +75,12 @@
                                         <div class="pd-color-choose">
                                             @foreach(array_unique(array_column($product->productDetails->toArray(), 'color')) as $productColor)
                                                 <div class="cc-item">
-                                                    <input type="radio" id="cc-{{$productColor}}" name="color" value="{{$productColor}}" required>
+                                                    <input type="radio" id="cc-{{$productColor}}" name="color" value="{{$productColor}}" required onchange="updateColorName('{{$productColor}}')">
                                                     <label for="cc-{{$productColor}}" class="cc-{{$productColor}}"></label>
                                                 </div>
                                             @endforeach
+                                        </div>
+                                        <div class="selected-color-name" id="selected-color-name" style="margin-top: 8px; font-size: 13px; color: #666; min-height: 20px;">                         
                                         </div>
                                     </div>
                                     <div class="pd-size-choose">                                     
@@ -313,7 +315,26 @@
         </div>
     </div>
     <!-- Related Products Session End -->
-    
+<script>
+        
+        function updateColorName(colorValue) {
+            const colorNameElement = document.getElementById('selected-color-name');
+            const displayName = convertColorNameJS(colorValue);
+            
+            if (displayName) {
+                colorNameElement.innerHTML = '<i class="fa fa-circle" style="font-size: 10px; margin-right: 5px;"></i><strong>' + displayName + '</strong>';
+                colorNameElement.style.color = '#333';
+            }
+        }
+
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstColorInput = document.querySelector('input[name="color"]');
+            if (firstColorInput) {
+                
+            }
+        });
+    </script>
 @endsection
 
 

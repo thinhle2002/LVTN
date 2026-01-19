@@ -6,36 +6,14 @@
     <!-- Hero Section Begin -->
     <section class="hero-section">
         <div class="hero-items owl-carousel">
-            <div class="single-hero-items set-bg" data-setbg="front/img/hero-1.jpg">
-                {{-- <div class="container">
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <span>Men</span>
-                            <h1>11/11 Sales</h1>
-                            <p>Tưng bừng ngày đôi hàng tháng, deal hời thỏa sức mua sắm</p>
-                            <a href="#" class="primary-btn">Shop Now</a>
-                        </div>
-                    </div>
-                    <div class="off-card">
-                        <h2>Sale <span>44%</span></h2>
-                    </div>
-                </div> --}}
-            </div>
-            <div class="single-hero-items set-bg" data-setbg="front/img/hero-2.jpg">
-                {{-- <div class="container">
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <span>Kids</span>
-                            <h1>Siêu Sale Sập Sàn</h1>
-                            <p>SALE bùng cháy - Ưu đãi khủng. Chương trình chỉ áp dụng duy nhất ngày 11/11</p>
-                            <a href="#" class="primary-btn">Shop Now</a>
-                        </div>
-                    </div>
-                    <div class="off-card">
-                        <h2>Sale <span>44%</span></h2>
-                    </div>
-                </div> --}}
-            </div>
+            @forelse($banners as $banner)
+                <div class="single-hero-items set-bg"
+                     data-setbg="{{ asset('upload/front/img/banners/' . $banner->image) }}">
+                </div>
+            @empty
+                <div class="single-hero-items set-bg" data-setbg="{{ asset('front/img/hero-1.jpg') }}"></div>
+                <div class="single-hero-items set-bg" data-setbg="{{ asset('front/img/hero-2.jpg') }}"></div>
+            @endforelse
         </div>
     </section>
     <!-- Hero Section End -->

@@ -5,6 +5,23 @@
     <div class="app-main__inner">
         <div class="app-page-title">
             <div class="page-title-wrapper">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 <div class="page-title-heading">
                     <div class="page-title-icon">
                         <i class="pe-7s-ticket icon-gradient bg-mean-fruit"></i>
@@ -63,18 +80,38 @@
                                     <th>Màu sắc</th>
                                     <th>Kích cỡ</th>
                                     <th>Số lượng</th>
+                                    <th>Nhập thêm</th>
                                     <th>Mã hình ảnh</th>
                                     <th class="text-center">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($productDetails as $productDetail)
-                                    <tr>
+                                    <tr class="{{ $productDetail->qty < 30 ? 'table-warning' : '' }}">
                                         <td class="pl-4 text-muted">{{ $product->name }}</td>
-
                                         <td class="">{{ $productDetail->color }}</td>
                                         <td class="">{{ $productDetail->size }}</td>
-                                        <td class="">{{ $productDetail->qty }}</td>
+                                        <td class="">
+                                            {{ $productDetail->qty }}
+                                            @if($productDetail->qty < 30)
+                                                <span class="badge badge-warning ml-2">
+                                                    <i class="fa fa-exclamation-triangle"></i> Sắp hết
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td class="">
+                                            <form action="/admin/product/{{ $product->id }}/detail/{{ $productDetail->id }}/add-stock" method="POST" class="form-inline">
+                                                @csrf
+                                                <div class="input-group input-group-sm" style="width: 150px;">
+                                                    <input type="number" name="qty" class="form-control" min="1" placeholder="Số lượng" required>
+                                                    <div class="input-group-append">
+                                                        <button type="submit" class="btn btn-success btn-sm" title="Thêm">
+                                                            <i class="fa fa-plus"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </td>
                                         <td class="">{{ $productDetail->image_id }}</td>                                  
                                         <td class="text-center">
                                             <a href="./admin/product/{{ $product->id }}/detail/{{ $productDetail->id}}/edit" data-toggle="tooltip" title="Sửa"
@@ -89,7 +126,7 @@
                                                 <button class="btn btn-hover-shine btn-outline-danger border-0 btn-sm"
                                                     type="submit" data-toggle="tooltip" title="Xóa"
                                                     data-placement="bottom"
-                                                    onclick="return confirm('Do you really want to delete this item?')">
+                                                    onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                                     <span class="btn-icon-wrapper opacity-8">
                                                         <i class="fa fa-trash fa-w-20"></i>
                                                     </span>
@@ -98,7 +135,6 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                                
                             </tbody>
                         </table>
                     </div>

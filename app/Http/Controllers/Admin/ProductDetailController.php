@@ -92,7 +92,25 @@ class ProductDetailController extends Controller
         
         return redirect('/admin/product/' . $product_id . '/detail');
     }
+    public function addStock(Request $request, $product_id, $product_detail_id)
+    {
+        $request->validate([
+            'qty' => 'required|integer|min:1'
+        ]);
 
+        $productDetail = ProductDetail::find($product_detail_id);
+        
+        if ($productDetail) {
+            $productDetail->qty += $request->qty;
+            $productDetail->save();
+            
+            return redirect('/admin/product/' . $product_id . '/detail')
+                ->with('success', 'Đã thêm ' . $request->qty . ' sản phẩm vào kho!');
+        }
+        
+        return redirect('/admin/product/' . $product_id . '/detail')
+            ->with('error', 'Không tìm thấy sản phẩm!');
+    }
     /**
      * Remove the specified resource from storage.
      *

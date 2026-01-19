@@ -91,7 +91,7 @@
                                 <label for="content"
                                     class="col-md-3 text-md-right col-form-label">Nội dung</label>
                                 <div class="col-md-9 col-xl-8">
-                                    <input id="content"
+                                    <input name="content" id="content"
                                         placeholder="Nội dung" type="text" class="form-control" value="{{ $product->content }}">
                                 </div>
                             </div>
@@ -109,7 +109,7 @@
                                 <label for="discount"
                                     class="col-md-3 text-md-right col-form-label">Nhập giảm giá</label>
                                 <div class="col-md-9 col-xl-8">
-                                    <input id="discount"
+                                    <input required name="discount" id="discount"
                                         placeholder="Nhập giảm giá" type="text" class="form-control" value="{{ $product->discount }}">
                                 </div>
                             </div>

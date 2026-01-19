@@ -163,7 +163,31 @@
                                 </select>
                             </div>
                         </div>
-                        
+                        <div class="position-relative row form-group">
+                            <label for="expected_delivery_date" class="col-md-3 text-md-right col-form-label">
+                                Ngày giao hàng dự kiến
+                            </label>
+                            <div class="col-md-9 col-xl-8">
+                                <div class="input-group">
+                                    <input type="date" 
+                                           name="expected_delivery_date" 
+                                           id="expected_delivery_date" 
+                                           class="form-control" 
+                                           value="{{ $order->expected_delivery_date ? $order->expected_delivery_date->format('Y-m-d') : '' }}"
+                                           min="{{ date('Y-m-d') }}">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" onclick="updateExpectedDelivery({{ $order->id }})">
+                                            <i class="fa fa-save"></i> Lưu
+                                        </button>
+                                    </div>
+                                </div>
+                                @if($order->expected_delivery_date)
+                                    <small class="form-text text-muted">
+                                        Hiện tại: {{ $order->expected_delivery_date->format('d/m/Y') }}
+                                    </small>
+                                @endif
+                            </div>
+                        </div>
                         {{-- <div class="position-relative row form-group">
                             <label for="town_city" class="col-md-3 text-md-right col-form-label">
                                 Ngày giao hàng dự kiến</label>
@@ -179,7 +203,7 @@
     <!-- End Main -->
 <script>
     function updateOrderStatus(orderId, newStatus) {
-        console.log('Updating order:', orderId, 'Status:', newStatus); // Debug
+        console.log('Updating order:', orderId, 'Status:', newStatus);
         
         Swal.fire({
             title: 'Xác nhận',
@@ -192,7 +216,6 @@
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Disable select box
                 $('#status').prop('disabled', true);
                 
                 $.ajax({
@@ -203,7 +226,7 @@
                         status: newStatus
                     },
                     success: function(response) {
-                        console.log('Response:', response); // Debug
+                        console.log('Response:', response);
                         
                         if (response.success) {
                             Swal.fire({
@@ -229,7 +252,7 @@
                             status: xhr.status,
                             responseText: xhr.responseText,
                             error: error
-                        }); // Debug
+                        });
                         
                         let errorMessage = 'Có lỗi xảy ra khi cập nhật!';
                         
@@ -248,13 +271,85 @@
                             footer: 'Mã lỗi: ' + xhr.status
                         });
                         
-                        // Reset select về giá trị cũ
                         $('#status').val('{{ $order->status }}').prop('disabled', false);
                     }
                 });
             } else {
-                // Nếu hủy thì reset select về giá trị cũ
                 $('#status').val('{{ $order->status }}');
+            }
+        });
+    }
+
+    
+    function updateExpectedDelivery(orderId) {
+        const dateInput = document.getElementById('expected_delivery_date');
+        const selectedDate = dateInput.value;
+        
+        if (!selectedDate) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cảnh báo',
+                text: 'Vui lòng chọn ngày giao hàng!',
+            });
+            return;
+        }
+        
+        Swal.fire({
+            title: 'Xác nhận',
+            text: 'Bạn có chắc muốn cập nhật ngày giao hàng dự kiến?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dateInput.disabled = true;
+                
+                $.ajax({
+                    url: '/admin/order/' + orderId + '/update-expected-delivery',
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        expected_delivery_date: selectedDate
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công!',
+                                text: 'Cập nhật ngày giao hàng dự kiến thành công!',
+                                timer: 1500,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi!',
+                                text: response.message || 'Có lỗi xảy ra!'
+                            });
+                            dateInput.disabled = false;
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'Có lỗi xảy ra khi cập nhật!';
+                        
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: errorMessage,
+                        });
+                        
+                        dateInput.disabled = false;
+                    }
+                });
             }
         });
     }

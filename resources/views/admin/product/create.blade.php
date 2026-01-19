@@ -90,7 +90,7 @@
                                 <label for="content"
                                     class="col-md-3 text-md-right col-form-label">Nội dung</label>
                                 <div class="col-md-9 col-xl-8">
-                                    <input id="content"
+                                    <input name="content" id="content"
                                         placeholder="Nội dung (trống)" type="text" class="form-control" value="">
                                 </div>
                             </div>
@@ -108,7 +108,7 @@
                                 <label for="discount"
                                     class="col-md-3 text-md-right col-form-label">Giá sale</label>
                                 <div class="col-md-9 col-xl-8">
-                                    <input id="discount"
+                                    <input required name="discount" id="discount"
                                         placeholder="Giá khi sale (trống)" type="text" class="form-control" value="">
                                 </div>
                             </div>
@@ -206,13 +206,13 @@
                     // Ẩn và disable dropdown
                     tagSelect.style.display = 'none';
                     tagSelect.removeAttribute('required');
-                    tagSelect.disabled = true; // Disable để không submit
+                    tagSelect.disabled = true; 
                     tagSelect.value = '';
                     
                     // Hiện input mới
                     newTagContainer.style.display = 'block';
                     newTagInput.setAttribute('required', 'required');
-                    newTagInput.setAttribute('name', 'tag'); // Đổi name thành 'tag'
+                    newTagInput.setAttribute('name', 'tag'); 
                     newTagInput.focus();
                     
                     // Ẩn link

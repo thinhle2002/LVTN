@@ -55,16 +55,16 @@ Route::prefix('account')->group(function () {
     Route::post('/email/verification-notification', [App\Http\Controllers\Front\AccountController::class, 'resendVerificationEmail'])
         ->middleware(['throttle:6,1'])
         ->name('verification.resend');
-    Route::post('/account/change-password', [App\Http\Controllers\Front\AccountController::class, 'changePassword'])->name('account.change-password');
     // Forgot Password
     Route::get('/account/forgot-password', [App\Http\Controllers\Front\AccountController::class, 'forgotPassword'])->name('password.request');
     Route::post('/account/forgot-password', [App\Http\Controllers\Front\AccountController::class, 'sendResetLink'])->name('password.email');
     // Reset Password
     Route::get('/account/reset-password/{token}', [App\Http\Controllers\Front\AccountController::class, 'resetPassword'])->name('password.reset');
     Route::post('/account/reset-password', [App\Http\Controllers\Front\AccountController::class, 'updatePassword'])->name('password.update');
-    Route::get('profile-info', [App\Http\Controllers\Front\AccountController::class, 'profileInfo']);
-    Route::post('profile-info', [App\Http\Controllers\Front\AccountController::class, 'updateProfile']);
     Route::middleware(['auth'])->group(function () {
+        Route::get('profile-info', [App\Http\Controllers\Front\AccountController::class, 'profileInfo'])->name('account.profile');
+        Route::post('profile-info', [App\Http\Controllers\Front\AccountController::class, 'updateProfile'])->name('account.profile.update');
+        Route::post('change-password', [App\Http\Controllers\Front\AccountController::class, 'changePassword'])->name('account.change-password');
         Route::get('user-orders', [App\Http\Controllers\Front\AccountController::class, 'userOrders'])->name('user.orders');
         Route::get('user-orders/{id}', [App\Http\Controllers\Front\AccountController::class, 'orderDetail'])->name('user.order.detail');
         Route::post('orders/{id}/cancel', [App\Http\Controllers\Front\AccountController::class, 'cancelOrder'])->name('user.orders.cancel');
@@ -80,15 +80,21 @@ Route::prefix('admin')->group(function () {
     
     Route::middleware(['admin'])->group(function () {
         Route::post('order/{id}/update-status', [App\Http\Controllers\Admin\OrderController::class, 'updateStatus'])->name('admin.order.updateStatus');
+        Route::post('order/{id}/update-expected-delivery', [App\Http\Controllers\Admin\OrderController::class, 'updateExpectedDelivery'])->name('admin.order.updateExpectedDelivery');
         Route::resource('users', App\Http\Controllers\Admin\UserController::class);
         Route::resource('category', App\Http\Controllers\Admin\CategoryController::class);
         Route::resource('brand', App\Http\Controllers\Admin\BrandController::class);       
-        Route::resource('order', App\Http\Controllers\Admin\OrderController::class); 
+        Route::resource('order', App\Http\Controllers\Admin\OrderController::class);       
         Route::resource('product/{product_id}/image', App\Http\Controllers\Admin\ProductImageController::class);
         Route::resource('product/{product_id}/detail', App\Http\Controllers\Admin\ProductDetailController::class);
+        Route::post('product/{product_id}/detail/{product_detail_id}/add-stock', 
+            [App\Http\Controllers\Admin\ProductDetailController::class, 'addStock'])->name('product.detail.addStock');
         Route::resource('product', App\Http\Controllers\Admin\ProductController::class);
         Route::resource('voucher', App\Http\Controllers\Admin\VoucherController::class);
+        Route::resource('banner', App\Http\Controllers\Admin\BannerController::class);
         Route::get('revenue', [App\Http\Controllers\Admin\RevenueController::class, 'index'])->name('revenue.index');
+        Route::get('revenue/by-customer', [App\Http\Controllers\Admin\RevenueController::class, 'byCustomer'])->name('revenue.byCustomer');
+        Route::resource('comment', App\Http\Controllers\Admin\ProductCommentController::class);
         // Route::get('revenue/export', [App\Http\Controllers\Admin\RevenueController::class, 'export'])->name('revenue.export');
     });
 });

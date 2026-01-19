@@ -62,6 +62,7 @@ class ProductController extends Controller
             'tag'                 => 'nullable|string|max:50',
             'new_tag'             => 'nullable|string|max:50',
             'price'               => 'required|numeric|min:0',
+            'discount'            => 'required|numeric|min:0',
             'weight'              => 'required|numeric|min:0',
             'description'         => 'nullable|string',
             'featured'            => 'nullable|boolean',
@@ -73,7 +74,7 @@ class ProductController extends Controller
         ]);
         
         $data = $request->except(['new_tag']);
-        dd($data);
+       
         if ($request->filled('new_tag')) {
             $data['tag'] = strtolower(trim($request->new_tag));
         }
@@ -135,6 +136,7 @@ class ProductController extends Controller
             'tag'                 => 'nullable|string|max:50',
             'new_tag'             => 'nullable|string|max:50',
             'price'               => 'required|numeric|min:0',
+            'discount'            => 'required|numeric|min:0',
             'weight'              => 'required|numeric|min:0',
             'description'         => 'nullable|string',
             'featured'            => 'nullable|boolean',
